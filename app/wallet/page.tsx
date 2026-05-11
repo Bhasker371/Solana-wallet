@@ -84,7 +84,7 @@ export default function WalletPage() {
           <p className="text-green-500 text-xs tracking-[0.4em] mb-2">SOLANA NETWORK</p>
           <h1 className="text-4xl font-bold">
             <span className="text-green-400">&gt; </span>
-            <span className="text-white">KOSH</span>
+            <span className="text-white">Beast</span>
             <span className="text-purple-400">_WALLET</span>
           </h1>
           <p className="text-gray-600 text-xs mt-2 tracking-widest">HD WALLET GENERATOR v1.0</p>
