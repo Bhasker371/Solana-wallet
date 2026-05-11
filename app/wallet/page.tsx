@@ -1,3 +1,7 @@
+// Built by Bhasker371
+// Beast Wallet - Solana HD Wallet
+// github.com/Bhasker371/Solana-wallet
+
 "use client";
 import { useState } from "react";
 import * as bip39 from "bip39";
@@ -21,13 +25,24 @@ export default function WalletPage() {
   const [showMnemonic, setShowMnemonic] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
   const [loading, setLoading] = useState<number | null>(null);
+  const [importPhrase, setImportPhrase] = useState("");
 
   async function generateWallet() {
     let phrase = mnemonic.join(" ");
-    if (!phrase) {
+
+    if (importPhrase) {
+      if (!bip39.validateMnemonic(importPhrase)) {
+        alert("Invalid phrase — must be 12 valid BIP39 words");
+        return;
+      }
+      phrase = importPhrase;
+      setMnemonic(importPhrase.split(" "));
+      setImportPhrase("");
+    } else if (!phrase) {
       phrase = bip39.generateMnemonic();
       setMnemonic(phrase.split(" "));
     }
+
     const seed = await bip39.mnemonicToSeed(phrase);
     const index = wallets.length;
     const { key: derivedSeed } = derivePath(`m/44'/501'/${index}'/0'`, seed.toString("hex"));
@@ -73,8 +88,6 @@ export default function WalletPage() {
 
   return (
     <div className="min-h-screen bg-gray-950 text-white font-mono">
-
-      {/* subtle grid */}
       <div className="fixed inset-0 bg-[linear-gradient(rgba(0,255,128,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,128,0.02)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
 
       <div className="relative max-w-2xl mx-auto px-6 py-12">
@@ -84,18 +97,34 @@ export default function WalletPage() {
           <p className="text-green-500 text-xs tracking-[0.4em] mb-2">SOLANA NETWORK</p>
           <h1 className="text-4xl font-bold">
             <span className="text-green-400">&gt; </span>
-            <span className="text-white">Beast</span>
+            <span className="text-white">BEAST</span>
             <span className="text-purple-400">_WALLET</span>
           </h1>
           <p className="text-gray-600 text-xs mt-2 tracking-widest">HD WALLET GENERATOR v1.0</p>
         </div>
 
-        {/* generate button */}
+        {/* import input */}
+        <div className="mb-3">
+          <input
+            type="text"
+            placeholder="Import existing wallet — enter 12-word phrase here (optional)"
+            value={importPhrase}
+            onChange={(e) => setImportPhrase(e.target.value)}
+            className="w-full bg-black border border-green-800 text-green-300 text-xs px-4 py-3 placeholder-green-900 focus:outline-none focus:border-green-500 font-mono"
+          />
+        </div>
+
+        {/* generate/import button */}
         <button
           onClick={generateWallet}
           className="w-full mb-8 py-4 border-2 border-green-500 text-green-400 hover:bg-green-500 hover:text-black transition-all duration-200 text-sm tracking-widest font-bold"
         >
-          ▶ &nbsp; {wallets.length === 0 ? "INITIALIZE WALLET" : "ADD ANOTHER WALLET"}
+          ▶ &nbsp;
+          {importPhrase
+            ? "IMPORT WALLET"
+            : wallets.length === 0
+            ? "INITIALIZE WALLET"
+            : "ADD ANOTHER WALLET"}
         </button>
 
         {/* mnemonic */}
@@ -137,7 +166,6 @@ export default function WalletPage() {
         {wallets.map((w, i) => (
           <div key={i} className="mb-4 border border-green-800 bg-gray-900">
 
-            {/* wallet header bar */}
             <div className="bg-green-950 border-b border-green-800 px-5 py-3 flex justify-between items-center">
               <span className="text-green-400 text-sm font-bold tracking-widest">
                 ▸ WALLET_{String(i + 1).padStart(2, "0")}
