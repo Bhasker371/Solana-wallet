@@ -3,7 +3,7 @@
 A web-based HD wallet built on Solana. Generate seed phrases, create multiple wallets, and view live SOL and USDC balances on mainnet.
 
 ## Live Demo
-your-vercel-url.vercel.app/wallet
+[your-vercel-url.vercel.app/wallet](https://solana-wallet-azure.vercel.app/wallet)
 
 ## Features
 - Generate a random 12-word seed phrase
